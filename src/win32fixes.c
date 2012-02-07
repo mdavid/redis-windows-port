@@ -14,7 +14,6 @@
 #include <math.h>
 #include "win32fixes.h"
 
-
 /* Redefined here to avoid redis.h so it can be used in other projects */
 #define REDIS_NOTUSED(V) ((void) V)
 
@@ -35,24 +34,6 @@ int w32initWinSock(void) {
     return 1;
 }
 
-/* Placeholder for terminating forked process. */
-/* fork() is nonexistatn on windows, background cmds are todo */
-int w32CeaseAndDesist(pid_t pid) {
-
-    HANDLE h = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
-
-    /* invalid process; no access rights; etc   */
-    if (h == NULL)
-        return errno = EINVAL;
-
-    if (!TerminateProcess(h, 127))
-        return errno = EINVAL;
-
-    errno = WaitForSingleObject(h, INFINITE);
-    CloseHandle(h);
-
-    return 0;
-}
 
 /* Behaves as posix, works without ifdefs, makes compiler happy */
 int sigaction(int sig, struct sigaction *in, struct sigaction *out) {
